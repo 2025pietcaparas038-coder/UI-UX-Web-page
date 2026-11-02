@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fff3f7">
+<title>A Little Something for You ✿</title>
+<style>
+  :root{
+    --pink:#f5a9c4; --rose:#d85f8c; --ink:#493746; --muted:#8d7786;
+    --cream:#fffaf7; --lav:#eee8ff; --line:#f3dce6; --white:#ffffff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family: ui-rounded, "Trebuchet MS", system-ui, -apple-system, sans-serif;
+    background:
+      radial-gradient(circle at 8% 12%, #ffe0eb 0, transparent 24rem),
+      radial-gradient(circle at 92% 25%, #e8e1ff 0, transparent 25rem),
+      linear-gradient(145deg,#fff8fb,#fffaf6 60%,#f9f5ff);
+    overflow-x:hidden;
+  }
+  button,input{font:inherit}
+  button{cursor:pointer}
+  .sparkle{position:fixed;z-index:0;pointer-events:none;opacity:.55;animation:float 7s ease-in-out infinite}
+  .s1{top:12%;left:5%;font-size:22px}.s2{top:28%;right:7%;font-size:18px;animation-delay:-2s}
+  .s3{bottom:18%;left:8%;font-size:17px;animation-delay:-4s}.s4{bottom:12%;right:10%;font-size:24px;animation-delay:-1s}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-13px) rotate(10deg)}}
+  .wrap{position:relative;z-index:1;width:min(760px,100%);margin:auto;padding:22px 16px 46px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 2px 24px}
+  .brand{font-size:.88rem;font-weight:800;letter-spacing:.04em;color:#9e6682}
+  .pill{border:1px solid #f1d5e2;background:#ffffffad;border-radius:999px;padding:8px 12px;color:#9b7086;font-size:.78rem}
+  .panel{
+    background:#ffffffd9;border:1px solid #fff;box-shadow:0 18px 60px #b77e991b,0 2px 10px #b77e9910;
+    border-radius:28px;padding:clamp(22px,5vw,42px);backdrop-filter:blur(12px);
+  }
+  .screen{display:none;animation:appear .45s ease both}.screen.active{display:block}
+  @keyframes appear{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .eyebrow{text-transform:uppercase;letter-spacing:.17em;font-size:.7rem;font-weight:800;color:#bc7796;margin:0 0 13px}
+  h1,h2{font-family:Georgia,"Times New Roman",serif;letter-spacing:-.035em;font-weight:500;line-height:1.08;margin:0 0 15px}
+  h1{font-size:clamp(2.45rem,8vw,4.65rem)}h2{font-size:clamp(2rem,6vw,3.2rem)}
+  .gradient{background:linear-gradient(110deg,#c45183,#8e72bd);-webkit-background-clip:text;background-clip:text;color:transparent}
+  p{line-height:1.75;color:var(--muted);margin:0 0 17px}
+  .typing-text{min-height:3.5em}
+  .typing-text .typed-cursor{display:inline-block;color:#c45183;animation:blink .8s steps(2,start) infinite}
+  @keyframes blink{to{visibility:hidden}}
+  .envelope-wrap{max-width:480px;margin:24px auto 10px;perspective:1000px}
+  .envelope{position:relative;width:100%;height:245px;border:0;background:transparent;padding:0;display:block;overflow:visible;cursor:pointer}
+  .env-back{position:absolute;inset:36px 0 0;background:#f7dce8;border-radius:12px 12px 18px 18px;box-shadow:0 14px 30px #ba77922b}
+  .env-paper{position:absolute;left:7%;right:7%;bottom:13px;height:140px;background:#fffdfd;border:1px solid #f3dce6;border-radius:9px;padding:18px 16px;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:transform .7s cubic-bezier(.2,.8,.2,1),opacity .4s;z-index:2}
+  .env-paper .paper-title{font-family:Georgia,serif;font-size:1.35rem;color:#925b7c;margin-bottom:8px}
+  .env-paper p{font-size:.9rem;line-height:1.5;margin:0}
+  .env-front{position:absolute;inset:36px 0 0;background:linear-gradient(145deg,#f2bfd3,#e7b8d9);clip-path:polygon(0 0,50% 57%,100% 0,100% 100%,0 100%);border-radius:0 0 18px 18px;z-index:3}
+  .env-flap{position:absolute;top:36px;left:0;width:100%;height:58%;background:linear-gradient(145deg,#f9dbe8,#eebbd4);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .65s ease;z-index:4;filter:drop-shadow(0 4px 3px #b7789430)}
+  .env-seal{position:absolute;z-index:5;left:50%;top:57%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:#fff6fb;display:grid;place-items:center;box-shadow:0 4px 12px #b7789430;font-size:1.35rem;transition:opacity .25s}
+  .envelope.open .env-flap{transform:rotateX(180deg);z-index:1}
+  .envelope.open .env-paper{transform:translateY(-105px);transition-delay:.18s;z-index:6}
+  .envelope.open .env-seal{opacity:0}
+  .envelope-hint{font-size:.82rem;color:#b17b97;margin:4px 0 12px}
+  @media(max-width:480px){.envelope{height:225px}.env-paper{height:130px;padding:13px}.envelope.open .env-paper{transform:translateY(-92px);z-index:6}}
+  .hero-art{width:148px;height:148px;margin:2px auto 23px;display:grid;place-items:center;position:relative}
+  .hero-art .blob{position:absolute;inset:8px;border-radius:42% 58% 58% 42% / 45% 43% 57% 55%;background:linear-gradient(145deg,#ffe0eb,#f3e8ff);transform:rotate(-8deg)}
+  .hero-art .heart{position:relative;font-size:66px;filter:drop-shadow(0 8px 8px #d88aaf40);animation:heartbeat 2s ease-in-out infinite}
+  @keyframes heartbeat{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+  .center{text-align:center}.center p{max-width:510px;margin-left:auto;margin-right:auto}
+  .btn{
+    border:0;border-radius:999px;padding:14px 21px;font-weight:800;color:white;
+    background:linear-gradient(110deg,#df7fa4,#ad8bd8);box-shadow:0 9px 20px #d18caf3b;
+    transition:transform .18s,box-shadow .18s;display:inline-flex;align-items:center;justify-content:center;gap:8px
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px #d18caf50}
+  .btn:active{transform:scale(.98)}.btn.secondary{background:#fff;color:#a36684;border:1px solid #f0d5e1;box-shadow:none}#noBtn{position:relative;transition:left .22s ease,top .22s ease,transform .22s ease;z-index:2}
+  .actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:24px}
+  .progress{height:5px;background:#f6e7ee;border-radius:99px;overflow:hidden;margin-bottom:25px}
+  .progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#e68db0,#b39ae7);transition:width .3s}
+  .question-count{font-size:.78rem;font-weight:800;color:#bc7d9b;letter-spacing:.1em;margin-bottom:10px}
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:22px 0}
+  .option{border:1px solid var(--line);border-radius:17px;padding:16px 13px;background:#fffafc;color:#775b6c;text-align:left;min-height:72px;transition:.2s}
+  .option:hover{border-color:#e7a7c2;transform:translateY(-2px);background:#fff3f8}
+  .option.selected{background:#fce7f0;border-color:#dc8eaf;box-shadow:inset 0 0 0 1px #dc8eaf}
+  .option .emoji{font-size:1.35rem;display:block;margin-bottom:7px}
+  .note{font-size:.84rem;color:#a58d9b}
+  .cluebox{border:1px dashed #e7b3ca;background:#fff7fb;border-radius:20px;padding:22px;text-align:center;margin:20px 0}
+  .cluebox .big{font-size:2.5rem;margin-bottom:9px}
+  .answer-row{display:flex;gap:9px;max-width:400px;margin:16px auto 0}
+  input{min-width:0;flex:1;border:1px solid #edd5e0;border-radius:13px;padding:13px 14px;background:white;color:var(--ink);outline:none}
+  input:focus{border-color:#d889ab;box-shadow:0 0 0 3px #f9e1eb}
+  .feedback{min-height:25px;font-size:.85rem;color:#b45f83;margin-top:10px}
+  .reveal-card{background:linear-gradient(145deg,#fff1f7,#f4efff);border:1px solid #f7dce8;border-radius:24px;padding:25px;text-align:center;margin:20px 0}
+  .reveal-card .big{font-size:3.3rem;margin-bottom:12px}
+  .reveal-card p{color:#826d7d}
+  .tiny{font-size:.75rem;color:#b29aa9;margin-top:24px}
+  .confetti{position:fixed;z-index:10;top:-20px;pointer-events:none;animation:fall 3.5s linear forwards}
+  @keyframes fall{to{transform:translateY(110vh) rotate(650deg);opacity:.2}}
+  footer{text-align:center;padding:20px 0 0;color:#b197a7;font-size:.76rem}
+  @media(max-width:480px){.wrap{padding:15px 12px 30px}header{margin-bottom:17px}.panel{border-radius:23px;padding:24px 19px}.options{gap:8px}.option{padding:13px 11px;min-height:75px;font-size:.9rem}.answer-row{flex-direction:column}.answer-row .btn{width:100%}.hero-art{width:125px;height:125px}.hero-art .heart{font-size:56px}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition:none!important}}
+
+/* Friendship-surprise extras: gentle floating flowers, stars and a shareable recap card */
+.floating-decor{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.floating-bit{position:absolute;bottom:-42px;opacity:0;animation:floatUp var(--duration,12s) linear infinite;animation-delay:var(--delay,0s);font-size:var(--size,20px);filter:drop-shadow(0 3px 5px rgba(160,110,150,.12))}
+@keyframes floatUp{0%{transform:translate3d(0,0,0) rotate(0deg);opacity:0}10%{opacity:.68}85%{opacity:.55}100%{transform:translate3d(var(--drift,24px),-110vh,0) rotate(30deg);opacity:0}}
+body>*:not(.floating-decor){position:relative;z-index:1}
+.wrapped-card{margin:22px auto 12px;max-width:540px;border:1px solid #f0d7e7;border-radius:24px;padding:22px;background:linear-gradient(145deg,#fffafd,#f5f0ff);box-shadow:0 14px 35px rgba(145,100,150,.12);text-align:center;color:#72566f}
+.wrapped-kicker{font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:#a87591;font-weight:800}
+.wrapped-title{font-family:Georgia,serif;font-size:clamp(1.5rem,5vw,2.1rem);line-height:1.2;color:#925b7c;margin:10px 0}
+.wrapped-chip{display:inline-block;margin:4px;padding:7px 11px;border-radius:999px;background:#f9e8f1;color:#875b78;font-size:.88rem}
+.wrapped-message{font-size:1rem;line-height:1.65;margin:12px 0}
+.share-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin-top:16px}
+.share-actions button{border:0;border-radius:999px;padding:11px 16px;background:#986f9f;color:#fff;font:inherit;font-weight:700;cursor:pointer}
+.share-actions button.secondary{background:#f4e5f0;color:#805b7b}
+.share-status{min-height:1.3em;font-size:.84rem;color:#8b6a88;margin-top:10px}
+@media(prefers-reduced-motion:reduce){.floating-bit{animation:none;display:none}}
+@media(max-width:480px){.wrapped-card{padding:18px;margin-left:4px;margin-right:4px}.share-actions button{flex:1 1 100%}}
+
+
+/* Photo-free friendship scrapbook */
+.scrapbook-book{margin:22px 0 12px;border:1px solid #f0d8e8;border-radius:22px;padding:18px;background:linear-gradient(145deg,#fff8fb,#f4efff);box-shadow:0 10px 25px #b77e9912}
+.scrapbook-tabs{display:flex;gap:8px;overflow-x:auto;padding:3px 1px 12px;margin-bottom:6px}
+.scrapbook-tab{flex:0 0 auto;border:1px solid #ecd6e5;background:#fff9fc;color:#916b85;border-radius:999px;padding:9px 12px;font-size:.82rem;font-weight:800}
+.scrapbook-tab.active{background:#eadfff;color:#78549b;border-color:#d6c3f1}
+.scrap-page{display:none;min-height:260px;border:1px dashed #e8c6da;border-radius:18px;padding:22px 18px;background:radial-gradient(circle at 95% 5%,#f2e9ff 0,transparent 8rem),linear-gradient(135deg,#fffdf9,#fff5fa);position:relative;overflow:hidden}
+.scrap-page.active{display:block;animation:appear .35s ease both}
+.scrap-page:after{content:"✿  ✦  ✧";position:absolute;right:12px;bottom:10px;color:#d5a5c7;font-size:1.2rem;letter-spacing:5px;opacity:.75}
+.scrap-page h3{font-family:Georgia,serif;font-size:1.6rem;font-weight:500;color:#95658c;margin:0 0 12px}
+.scrap-page p{color:#826c7c}
+.scrap-sticker{display:inline-block;background:#fce5ef;border-radius:12px;padding:9px 12px;margin:5px 4px 5px 0;transform:rotate(-1deg);color:#8d5f7b;font-size:.88rem}
+.scrap-sticker:nth-child(even){background:#eee7ff;transform:rotate(1.5deg);color:#78629d}
+.scrap-scoreboard{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0}
+.scrap-scoreboard div{background:#f1eaff;border-radius:14px;padding:13px;text-align:center;color:#795a9b}
+.scrap-scoreboard div+div{background:#fce8f0;color:#a45d81}
+.scrap-reveal{border:1px solid #ead4e3;background:#fffafd;border-radius:15px;padding:13px 15px;color:#8d5f7b;width:100%;text-align:left;margin:7px 0;font-weight:700}
+.scrap-reveal span{display:none;font-weight:400;line-height:1.65;margin-top:8px;color:#806b7b}
+.scrap-reveal.open span{display:block}
+.scrap-nav{display:flex;justify-content:space-between;gap:10px;margin-top:15px;flex-wrap:wrap}
+.scrap-nav button{border:1px solid #ecd6e5;border-radius:999px;background:white;color:#946780;padding:10px 15px;font-weight:800}
+.scrap-nav button:disabled{opacity:.4;cursor:default}
+
+.nickname-question{margin:4px 0 16px;padding:16px;border:1px solid #ead8f2;border-radius:17px;background:linear-gradient(135deg,#fff8fc,#f3efff);position:relative;z-index:1}
+.nickname-question h4{margin:0 0 8px;color:#8d6799;font-size:1.08rem}
+.nickname-question p{margin:0 0 12px;font-size:.94rem}
+.nickname-answers{display:grid;gap:8px}
+.nickname-answer{width:100%;text-align:left;border:1px solid #e8d7ec;border-radius:13px;padding:11px 13px;background:#fff;color:#765d83;font:inherit;font-weight:700;cursor:pointer;transition:transform .15s,background .15s}
+.nickname-answer:hover{transform:translateY(-1px);background:#f8efff}
+.nickname-answer:focus-visible{outline:3px solid #c9a9e8;outline-offset:2px}
+.nickname-reaction{min-height:1.4em;margin-top:11px!important;font-weight:700;color:#95658c!important}
+.nickname-chronicles{animation:appear .35s ease both}
+@media(max-width:480px){.nickname-question{padding:13px}.nickname-answer{font-size:.9rem}}
+@media(max-width:480px){.scrapbook-book{padding:12px}.scrap-page{padding:19px 15px;min-height:280px}.scrap-scoreboard{grid-template-columns:1fr 1fr}}
+
+
+/* Visual refresh: editorial scrapbook, open canvas, layered botanical details */
+:root{--pink:#efa3c2;--rose:#c75d91;--ink:#403044;--muted:#816f82;--cream:#fffaf7;--lav:#eee7ff;--line:#ead8e9;--white:#fff}
+body{
+  background:
+    radial-gradient(ellipse at 8% 16%,rgba(255,205,225,.68),transparent 26rem),
+    radial-gradient(ellipse at 94% 18%,rgba(214,204,255,.62),transparent 27rem),
+    radial-gradient(ellipse at 50% 100%,rgba(255,232,201,.48),transparent 34rem),
+    #fffafc;
+}
+body:before,body:after{content:"✿";position:fixed;z-index:0;pointer-events:none;font-size:clamp(8rem,20vw,17rem);line-height:1;color:#f3d5e6;opacity:.28;filter:blur(.2px)}
+body:before{left:-5rem;top:38%;transform:rotate(-18deg)}
+body:after{content:"❋";right:-5rem;bottom:2%;color:#ded4fa;transform:rotate(16deg)}
+.wrap{width:min(1000px,100%);padding:25px 24px 54px}
+header{margin:6px 3px 18px;position:relative;z-index:2}
+.brand{letter-spacing:.13em;font-size:.78rem;color:#97617f}
+.pill{background:#ffffff9c;border-color:#efdfed;backdrop-filter:blur(12px)}
+.panel{background:transparent;border:0;box-shadow:none;border-radius:0;padding:clamp(18px,4vw,44px) clamp(4px,2vw,18px);backdrop-filter:none;overflow:visible}
+.screen{min-height:58vh;align-content:center}
+.screen.active{animation:editorialIn .65s cubic-bezier(.2,.7,.2,1) both}
+@keyframes editorialIn{from{opacity:0;transform:translateY(16px) scale(.99);filter:blur(3px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+.hero-art{width:178px;height:178px;margin:0 auto 25px}
+.hero-art .blob{inset:6px;border-radius:48% 52% 44% 56% / 56% 42% 58% 44%;background:linear-gradient(145deg,#ffdce9,#e9ddff 70%,#fff0db);box-shadow:0 22px 55px #d5a7ca2e}
+.hero-art .heart{font-size:72px;filter:drop-shadow(0 12px 12px #b887b044)}
+.eyebrow{color:#b66e93;letter-spacing:.2em}
+h1{font-size:clamp(2.7rem,8vw,5.6rem);line-height:1.02;max-width:900px;margin-left:auto;margin-right:auto}
+h2{font-size:clamp(2.2rem,6vw,3.7rem)}
+p{font-size:1.02rem}
+.center>p:not(.eyebrow){max-width:590px;font-size:clamp(1rem,2.2vw,1.15rem)}
+.actions{gap:12px;margin-top:29px}
+.btn{padding:15px 24px;box-shadow:0 12px 28px #d18caf2b;letter-spacing:.005em}
+.btn.secondary{background:#ffffffb8;border-color:#e8cddd;backdrop-filter:blur(8px)}
+#noBtn{position:relative}
+.progress{height:4px;background:#f1e3ee;border-radius:99px}
+.options{gap:14px}
+.option{background:#ffffffb8;border:1px solid #eadbe9;border-radius:22px;padding:19px 17px;box-shadow:0 7px 20px #9d78a10b}
+.option:hover{background:#fff7fb;border-color:#d9a2c0}
+.option.selected{background:linear-gradient(135deg,#fbe5f0,#f0eaff)}
+.cluebox{border:0;border-radius:26px;background:linear-gradient(135deg,#fff0f6bd,#f0eaffbd);padding:28px}
+.reveal-card{border:0;border-radius:30px;background:linear-gradient(135deg,#fff0f6,#f0ebff 75%,#fff4e6);padding:clamp(24px,5vw,42px);box-shadow:0 20px 55px #bca0c21c}
+.scrapbook-book{border:0;border-radius:0;padding:18px 0;background:transparent;box-shadow:none;margin:22px 0 12px}
+.scrapbook-tabs{padding:8px 2px 18px;margin-bottom:12px;scrollbar-width:thin;scrollbar-color:#e7c5dc transparent}
+.scrapbook-tab{border:0;background:#ffffffa6;box-shadow:0 4px 15px #9d78a10a;border-radius:999px;padding:10px 15px}
+.scrapbook-tab.active{background:#e9ddfa;color:#77529a;box-shadow:0 5px 15px #c5b0e52b}
+.scrap-page{min-height:310px;border:0;border-radius:5px 28px 28px 5px;padding:clamp(24px,5vw,48px);background:linear-gradient(90deg,#f1dbe8 0,#fffdfb 1.2%,#fffdfb 80%,#fbf0f7 100%);box-shadow:12px 18px 45px #9f77951c;}
+.scrap-page:before{content:"";position:absolute;left:16px;top:0;bottom:0;width:1px;background:#f0e0e8}
+.scrap-page:after{right:22px;bottom:18px;font-size:1.35rem;opacity:.7}
+.scrap-page h3{font-size:clamp(1.8rem,4vw,2.4rem);color:#8e5b86}
+.scrap-sticker{box-shadow:0 4px 12px #a47a9612;padding:10px 14px}
+.scrap-scoreboard{gap:14px}
+.scrap-scoreboard div{border-radius:20px;padding:18px;background:#eee6ff}
+.scrap-scoreboard div+div{background:#fbe6ef}
+.scrap-reveal{border:0;border-bottom:1px solid #eedbe8;border-radius:0;background:#ffffffa8;padding:16px 17px}
+.nickname-question{border:0;border-radius:24px;background:linear-gradient(135deg,#fff1f7,#f0ebff);padding:22px}
+.nickname-answer{border-radius:16px;background:#ffffffb8}
+.wrapped-card{border:0;border-radius:30px;background:linear-gradient(145deg,#fff5fa,#f0eaff 78%,#fff5e8);box-shadow:0 20px 55px #9f77951c;padding:clamp(24px,5vw,38px)}
+footer{padding-top:28px;letter-spacing:.04em}
+@media(max-width:600px){.wrap{padding:17px 15px 36px}header{margin-bottom:8px}.panel{padding:16px 2px}.screen{min-height:64vh}.hero-art{width:140px;height:140px}.hero-art .heart{font-size:58px}.options{grid-template-columns:1fr}.option{min-height:unset}.scrap-page{min-height:300px;padding:26px 22px}.scrapbook-tabs{margin-left:-2px;margin-right:-2px}.actions .btn{width:100%}}
+@media(prefers-reduced-motion:reduce){.screen.active{animation:none}}
+
+
+/* Scrapbook v2: no floating emoji layer; real editorial paper and photo-print moodboard */
+.floating-decor,.floating-bit,.sparkle{display:none!important}
+body:before,body:after{content:none!important}
+body{background:radial-gradient(ellipse at 0% 10%,#f9e7ef 0,transparent 28rem),radial-gradient(ellipse at 100% 38%,#ece7fb 0,transparent 28rem),#fffaf8}
+.scrapbook-book{position:relative;margin:30px 0 16px;padding:clamp(12px,3vw,28px);background:#f4e9df;border:1px solid #e8d9cf;box-shadow:0 18px 45px #765b4b18;transform:rotate(-.25deg)}
+.scrapbook-book:before{content:"";position:absolute;inset:8px;border:1px solid #e6d7ce;pointer-events:none}
+.scrapbook-tabs{position:relative;z-index:1}
+.scrapbook-tab{font-size:.78rem;background:#fffaf4;border:1px solid #e4d6ce;box-shadow:2px 3px 0 #e4d6ce}
+.scrapbook-tab.active{background:#55455a;color:white;border-color:#55455a;box-shadow:2px 3px 0 #c9b7c5}
+.scrap-page{background:#fffdf8;min-height:390px;border-radius:2px;padding:clamp(20px,4vw,40px);box-shadow:0 8px 20px #8c75651a;overflow:visible}
+.scrap-page:before{left:12px;top:0;bottom:0;width:2px;background:#f0dfe3}
+.scrap-page:after{content:"";width:58px;height:18px;right:28px;top:-7px;bottom:auto;letter-spacing:0;background:#ead9e6a8;transform:rotate(3deg)}
+.scrap-page h3{font-family:"Segoe Print","Comic Sans MS",cursive;font-style:normal;font-weight:700;color:#8e5b86;letter-spacing:-.025em}
+.scrap-page p{color:#716270;font-family:"Segoe Print","Comic Sans MS",cursive;font-size:.98rem;line-height:1.8}
+.scrap-cover-copy h3{font-family:"Segoe Print","Comic Sans MS",cursive}
+.scrap-page strong{color:#8d5e82}
+.scrap-page .scrap-sticker{font-family:"Segoe Print","Comic Sans MS",cursive}
+.polaroid img{background:#f2e7ee;min-height:185px}
+.polaroid img:not([src]){visibility:hidden}
+.scrap-cover-layout,.chapter-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(150px,.78fr);gap:22px;align-items:center}
+.paper-label{font-size:.65rem;letter-spacing:.16em;font-weight:900;color:#a56b87}
+.scrap-cover-copy h3{font-size:clamp(2rem,5vw,3rem);line-height:1.02;margin:14px 0}
+.polaroid{margin:8px auto 14px;padding:9px 9px 28px;background:#fff;box-shadow:0 8px 20px #59444d24;max-width:255px;transform:rotate(3deg);position:relative}
+.polaroid img{display:block;width:100%;height:185px;object-fit:cover;filter:saturate(.82) contrast(.98)}
+.polaroid figcaption{position:absolute;left:7px;right:7px;bottom:7px;text-align:center;font-family:"Trebuchet MS",sans-serif;font-size:.74rem;color:#786675}
+.tilt-left{transform:rotate(-4deg)}.tilt-right{transform:rotate(3.5deg)}
+.scrap-tape-note{display:inline-block;margin-top:15px;padding:11px 14px;background:#f6e8bc;color:#76644c;font-size:.88rem;transform:rotate(-1deg)}
+.handwritten-note{display:inline-block;color:#9b6584;font-family:Georgia,serif;font-style:italic;transform:rotate(-2deg);margin:2px 0 12px}
+.scrap-scoreboard div{border-radius:2px!important;box-shadow:3px 4px 0 #e7dce8}
+.scrap-reveal{background:transparent;color:#78556b;border-bottom:1px dashed #d7bdcd}
+@media(max-width:560px){.scrap-cover-layout,.chapter-split{grid-template-columns:1fr;gap:8px}.cover-photo{width:min(76%,260px);margin:8px auto 18px}.polaroid img{height:190px}.scrap-page{min-height:unset}.scrapbook-book{padding:10px}.scrap-page:after{right:20px}}
+
+
+/* Premium scrapbook art direction: physical paper, book spine, photo prints, layered stationery */
+:root{--paper:#fff9ef;--paper-edge:#e8d9c7;--plum:#5a3e59;--berry:#b64f7b;--pencil:#766374}
+body{background:radial-gradient(ellipse at 12% 8%,#f8dce8 0,transparent 27rem),radial-gradient(ellipse at 92% 30%,#e5def8 0,transparent 29rem),linear-gradient(135deg,#fff9f3,#f9f2f5 55%,#f1edf9)}
+.wrap{width:min(1080px,100%)}
+header{padding:11px 15px;border:1px solid #ffffffa6;border-radius:18px;background:#fffaf7a6;box-shadow:0 7px 28px #8e6c8520;backdrop-filter:blur(14px)}
+.brand:before{content:"✦  ";color:#c17b9c}
+.panel{padding-top:clamp(22px,4vw,48px);padding-bottom:clamp(28px,5vw,56px)}
+#scrapbook>h2{max-width:780px;font-size:clamp(2.4rem,6vw,4.2rem);margin-bottom:12px}
+#scrapbook>.eyebrow{display:inline-block;padding:8px 12px;background:#fff7f0;border:1px solid #ead9d5;border-radius:4px;box-shadow:2px 3px 0 #e8d9d4;transform:rotate(-1deg)}
+#scrapbook>p:not(.eyebrow){max-width:670px;font-size:1rem}
+.scrapbook-book{isolation:isolate;overflow:visible;border:1px solid #d8c5b3!important;border-radius:9px 15px 15px 9px!important;padding:clamp(12px,2.7vw,28px)!important;background:repeating-linear-gradient(0deg,#f0e3d4 0px,#f0e3d4 1px,#f5eadd 2px,#f5eadd 5px)!important;box-shadow:0 24px 55px #5b3f4b25,0 5px 0 #e3d1c1,0 8px 0 #cbb6a5!important;transform:none!important}
+.scrapbook-book:after{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:50%;width:22px;transform:translateX(-50%);background:linear-gradient(90deg,#c7ae9c33,#fff9efaa 45%,#b89b8b33);pointer-events:none}
+.scrapbook-book:before{inset:7px!important;border:1px solid #e2d0bd!important;border-radius:5px;box-shadow:inset 0 0 18px #b99a8510}
+.scrapbook-tabs{gap:7px;padding:4px 4px 18px!important;margin:0 0 2px!important}
+.scrapbook-tab{position:relative;border-radius:5px 5px 2px 2px!important;border:1px solid #d9c7ba!important;border-bottom:0!important;padding:11px 14px 13px!important;background:linear-gradient(#fffaf2,#f4e7d9)!important;color:#70546a!important;box-shadow:2px -2px 0 #d8c5b4!important;font-family:"Trebuchet MS",sans-serif;font-weight:800}
+.scrapbook-tab:nth-child(2n){transform:translateY(4px) rotate(.8deg)}
+.scrapbook-tab:nth-child(3n){transform:translateY(2px) rotate(-.8deg)}
+.scrapbook-tab.active{background:linear-gradient(#eab4ca,#d98eb0)!important;color:#532f49!important;border-color:#d49bb5!important;box-shadow:2px -2px 0 #c88ba8!important}
+.scrap-page{position:relative;isolation:isolate;min-height:420px!important;padding:clamp(23px,4vw,44px)!important;border:1px solid #e5d7c6!important;border-radius:3px!important;background-color:#fffaf0!important;background-image:radial-gradient(#c9b9a510 .7px,transparent .7px),linear-gradient(90deg,#f2e1df 0,#fffaf0 2.5%,#fffaf0 96%,#f4e7da 100%)!important;background-size:5px 5px,100% 100%!important;box-shadow:0 7px 18px #71584b17,inset 0 0 35px #d4b79a12!important}
+.scrap-page:before{content:"";position:absolute!important;left:22px!important;top:0!important;bottom:0!important;width:1px!important;background:#e9c9d1!important;opacity:.9}
+.scrap-page:after{content:"";position:absolute;right:24px!important;top:-8px!important;bottom:auto!important;width:76px!important;height:23px!important;background:#e5c7b9a8!important;box-shadow:0 1px 2px #765b4b12;transform:rotate(4deg);z-index:3}
+.scrap-page h3{position:relative;display:inline-block;z-index:1;font-size:clamp(1.9rem,4.4vw,2.8rem)!important;color:#794c70!important;padding:4px 10px 8px 0;margin-bottom:18px!important}
+.scrap-page h3:after{content:"";position:absolute;z-index:-1;left:-7px;right:-22px;bottom:3px;height:38%;background:#f3cbd9a6;transform:rotate(-1.5deg);border-radius:2px}
+.scrap-page p{font-family:"Segoe Print","Comic Sans MS",cursive!important;color:#655763!important;font-size:1rem!important;line-height:1.85!important}
+.scrap-page strong{color:#9c4f78!important}
+.scrap-cover-layout,.chapter-split{gap:clamp(18px,4vw,38px)!important}
+.scrap-cover-copy{padding:8px 4px 12px 8px}
+.paper-label{display:inline-block;padding:6px 8px;background:#dce7d7;color:#5b765e;transform:rotate(-2deg);box-shadow:2px 2px 0 #c5d4bf;font-size:.63rem}
+.scrap-cover-copy h3{font-size:clamp(2.5rem,6vw,4.1rem)!important;line-height:1!important;margin:20px 0!important}
+.scrap-sticker{border-radius:3px!important;box-shadow:2px 3px 0 #ddc9d7!important;transform:rotate(-2deg)!important;padding:10px 13px!important}
+.scrap-sticker:nth-of-type(even){transform:rotate(2deg)!important}
+.polaroid{padding:10px 10px 36px!important;border:1px solid #eee4da!important;border-radius:2px!important;box-shadow:0 9px 18px #49364427,0 2px 3px #49364410!important;max-width:290px!important;background:#fffefa!important}
+.polaroid:before{content:"";position:absolute;top:-9px;left:34%;width:75px;height:21px;background:#d8c1a5b8;transform:rotate(-5deg);z-index:2;box-shadow:0 1px 2px #6d51451a}
+.polaroid img{height:clamp(175px,24vw,245px)!important;object-fit:cover!important;display:block!important;width:100%!important;border:1px solid #eee4da;filter:saturate(.94) contrast(1.02)!important}
+.polaroid figcaption{font-family:"Segoe Print","Comic Sans MS",cursive!important;font-size:.78rem!important;color:#6f5b67!important;bottom:9px!important}
+.tilt-left{transform:rotate(-4.5deg)!important}.tilt-right{transform:rotate(4deg)!important}
+.scrap-tape-note{position:relative;display:inline-block;max-width:90%;margin:20px 0 8px 8px!important;padding:14px 17px!important;background:#f2e2b6!important;color:#6f5d48!important;box-shadow:2px 4px 0 #d6c6a5!important;font-family:"Segoe Print","Comic Sans MS",cursive;transform:rotate(-1.4deg)!important}
+.handwritten-note{display:inline-block;padding:9px 12px;background:#e7eddf;color:#63765c!important;box-shadow:2px 3px 0 #d0d8c8;transform:rotate(-1.5deg)!important}
+.scrap-scoreboard div{border-radius:3px!important;border:1px solid #e4d4e4;box-shadow:3px 4px 0 #e3d7e3!important}
+.scrap-reveal{background:#fffaf0!important;border-bottom:1px dashed #d9bdc9!important;font-family:"Segoe Print","Comic Sans MS",cursive}
+.nickname-question{border:1px dashed #d7b6cd!important;border-radius:4px!important;background:#f8e9ef!important;box-shadow:3px 4px 0 #e7d8e3}
+.nickname-answer{border-radius:4px!important;background:#fffaf2!important;border-color:#e2cfdc!important}
+.actions .btn{min-height:48px}
+.btn{box-shadow:0 8px 0 #9d719126,0 13px 25px #b17c9b24}
+.btn.secondary{box-shadow:0 4px 0 #d9c5d5!important}
+@media(max-width:560px){
+ .scrapbook-book{padding:9px!important;border-radius:7px!important}
+ .scrapbook-book:after{display:none}
+ .scrapbook-tabs{padding-bottom:14px!important}
+ .scrapbook-tab{padding:9px 11px 11px!important;font-size:.75rem!important}
+ .scrap-page{min-height:unset!important;padding:25px 18px 28px!important}
+ .scrap-page:before{left:12px!important}
+ .scrap-cover-layout,.chapter-split{grid-template-columns:1fr!important}
+ .scrap-cover-copy{padding-left:5px}
+ .cover-photo{width:min(78%,280px)!important;margin:10px auto 20px!important}
+ .polaroid img{height:210px!important}
+ .scrap-page:after{right:18px!important;width:58px!important}
+ .scrap-tape-note{max-width:100%;font-size:.82rem}
+}
+
+
+
+/* Fresh art direction: immersive editorial hero + tactile scrapbook */
+:root{--ink:#332737;--muted:#786978;--berry:#b94f7d;--paper:#fffaf0}
+body{background:#f8f2ef;background-image:radial-gradient(ellipse at 5% 0%,#f8dce7 0,transparent 34rem),radial-gradient(ellipse at 100% 25%,#e5def7 0,transparent 32rem),linear-gradient(135deg,#fbf6f1,#f8f1f7 58%,#f1edf8);}
+.wrap{width:min(1220px,100%);padding:24px clamp(14px,3vw,38px) 46px}
+header{border-radius:0;border:0;border-bottom:1px solid #d9cbd6;background:transparent;box-shadow:none;padding:10px 2px 17px;margin-bottom:4px;backdrop-filter:none}
+.brand{font-size:.72rem;letter-spacing:.18em;color:#765b73}.brand:before{content:'✳  ';color:#ba628b}.pill{background:#fff9f3;border:1px solid #e8d8df;color:#856d80}
+.panel{padding:0 clamp(0px,1vw,12px);}
+#welcome{min-height:min(790px,calc(100svh - 100px));align-content:center}
+.hero-editorial{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(390px,.96fr);gap:clamp(22px,4vw,64px);align-items:center;padding:clamp(26px,5vw,66px) 0 36px}
+.hero-copy{position:relative;z-index:2;padding:10px 0 4px}
+.hero-kicker{display:inline-flex;align-items:center;gap:9px;font-size:.67rem;font-weight:900;letter-spacing:.2em;color:#96617f;margin-bottom:26px}
+.kicker-dot{width:8px;height:8px;border-radius:50%;background:#c66c95;box-shadow:0 0 0 5px #eecddb}
+.hero-copy h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(2.8rem,5.5vw,5.35rem);line-height:.99;letter-spacing:-.065em;font-weight:500;margin:0 0 25px;max-width:740px}
+.hero-copy h1 em{font-weight:400;color:#986e9f}
+.hero-copy>p{max-width:460px;font-size:1.04rem;line-height:1.85;color:#786b7a;margin:0}
+.hero-signoff{display:flex;align-items:center;gap:12px;margin-top:23px;color:#a17b92;font-family:Georgia,serif;font-style:italic;font-size:.95rem}
+.sign-line{height:1px;width:42px;background:#cb9bb4}
+.hero-actions{justify-content:flex-start;margin-top:28px}
+.hero-actions .btn{border-radius:7px;padding:15px 19px;box-shadow:0 7px 0 #9d71911c,0 14px 25px #b17c9b18}
+.hero-actions .btn:first-child{background:#49384b;color:#fff8f6;box-shadow:0 6px 0 #32263820}
+.hero-actions .btn.secondary{background:#fffaf4;color:#6e5269;border:1px solid #e2d0da;box-shadow:0 4px 0 #d9c5d5}
+.hero-footnote{display:flex;gap:20px;flex-wrap:wrap;margin-top:42px;padding-top:15px;border-top:1px solid #e1d3dd;color:#a18a9b;font-size:.63rem;letter-spacing:.12em;font-weight:800}
+.hero-collage{min-height:530px;position:relative;isolation:isolate}
+.collage-orbit{position:absolute;border:1px solid #d6b7ce;border-radius:50%;pointer-events:none;z-index:-1}
+.orbit-one{width:430px;height:430px;right:2%;top:6%;transform:rotate(-18deg)}.orbit-two{width:330px;height:450px;right:12%;top:9%;border-color:#d8c7e7;transform:rotate(28deg)}
+.hero-polaroid{position:absolute;background:#fffdf8;padding:10px 10px 36px;box-shadow:0 17px 35px #49364420,0 2px 4px #49364412;border:1px solid #e8ded7;margin:0}
+.hero-polaroid:before{content:'';position:absolute;top:-10px;left:34%;width:72px;height:22px;background:#d9c2a8b8;transform:rotate(-5deg);z-index:2}
+.hero-polaroid img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.86)}
+.hero-polaroid figcaption{position:absolute;bottom:9px;left:8px;right:8px;text-align:center;color:#796779;font-family:'Segoe Print','Comic Sans MS',cursive;font-size:.75rem}
+.hero-photo-main{width:58%;height:355px;right:11%;top:8%;transform:rotate(5deg);z-index:2}
+.hero-photo-small{width:43%;height:235px;left:1%;bottom:7%;transform:rotate(-8deg);z-index:3}
+.hero-photo-side{width:38%;height:225px;right:0;bottom:5%;transform:rotate(7deg);z-index:1}
+.collage-note{position:absolute;z-index:4;background:#f2e4b9;color:#665640;padding:13px 17px;font-family:'Segoe Print','Comic Sans MS',cursive;font-size:.86rem;line-height:1.5;box-shadow:3px 5px 0 #d5c39e;transform:rotate(-6deg)}
+.note-top{top:1%;left:1%}.collage-sticker{position:absolute;z-index:4;display:grid;place-items:center;font-family:Georgia,serif}
+.sticker-star{right:3%;top:38%;font-size:3.3rem;color:#b95d85;transform:rotate(15deg)}
+.sticker-smile{left:9%;top:35%;width:76px;height:76px;border-radius:50%;background:#dce8d7;color:#59765e;text-align:center;font-size:.78rem;font-weight:800;transform:rotate(-12deg);box-shadow:3px 4px 0 #c5d3bf}
+.collage-bottom-note{position:absolute;bottom:-5px;right:7%;font-size:.59rem;letter-spacing:.16em;color:#987f94;font-weight:900;transform:rotate(-2deg)}
+/* Keep the scrapbook tactile and its chapter text visible */
+.scrapbook-book{background:repeating-linear-gradient(0deg,#eadbcd 0,#eadbcd 1px,#f3e7d9 2px,#f3e7d9 5px)!important;box-shadow:0 24px 55px #5b3f4b24,0 5px 0 #e3d1c1,0 8px 0 #cbb6a5!important}
+.scrap-page{background-color:#fffaf0!important;background-image:radial-gradient(#c9b9a510 .7px,transparent .7px),linear-gradient(90deg,#f2e1df 0,#fffaf0 2.5%,#fffaf0 96%,#f4e7da 100%)!important}
+.polaroid img,.hero-polaroid img{background:#e9dce4;object-fit:cover}
+@media(max-width:850px){.hero-editorial{grid-template-columns:1fr;gap:20px;padding-top:35px}.hero-copy{text-align:center}.hero-copy h1{margin-left:auto;margin-right:auto}.hero-copy>p{margin-left:auto;margin-right:auto}.hero-signoff,.hero-actions{justify-content:center}.hero-footnote{justify-content:center;margin-top:30px}.hero-collage{width:min(600px,100%);margin:0 auto;min-height:490px}.hero-photo-main{right:16%;width:54%;height:330px}.hero-photo-small{width:40%;height:220px}.hero-photo-side{width:35%;height:205px}}
+@media(max-width:520px){.wrap{padding:14px 16px 32px}header{padding-bottom:12px}.pill{font-size:.7rem;padding:7px 9px}.hero-editorial{padding:32px 0 18px}.hero-kicker{font-size:.58rem;margin-bottom:19px}.hero-copy h1{font-size:clamp(2.65rem,12vw,3.65rem)}.hero-copy>p{font-size:.96rem}.hero-actions .btn{width:100%}.hero-footnote{gap:8px 15px;font-size:.55rem}.hero-collage{min-height:365px;margin-top:4px}.orbit-one{width:300px;height:300px;right:3%;top:8%}.orbit-two{width:240px;height:310px;right:13%;top:10%}.hero-photo-main{width:57%;height:245px;right:11%;top:11%}.hero-photo-small{width:42%;height:170px;left:0;bottom:5%}.hero-photo-side{width:35%;height:160px;right:0;bottom:4%}.collage-note{font-size:.69rem;padding:9px 11px}.note-top{top:0;left:0}.sticker-smile{width:59px;height:59px;font-size:.65rem;left:4%;top:38%}.sticker-star{font-size:2.3rem;right:0;top:41%}.collage-bottom-note{font-size:.48rem;right:1%;bottom:-1px}.scrap-page p{font-size:.93rem!important}}
+
+</style>
+</head>
+<body>
+
+<main class="wrap">
+  <header><div class="brand">✿ LITTLE HAPPY THING</div><div class="pill">made just for you ✨</div></header>
+  <div class="panel">
+    <section class="screen active" id="welcome">
+      <div class="hero-editorial">
+        <div class="hero-copy">
+          <span class="hero-kicker"><span class="kicker-dot"></span> A LITTLE MEMORY, JUST FOR YOU</span>
+          <h1>Some friendships<br>deserve their <em>own little</em><br><span class="gradient">corner of the internet.</span></h1>
+          <p id="welcomeTyping" class="typing-text" aria-label="I made a little something for one of my favourite humans. It has a few choices, a tiny mystery, and absolutely no homework. Promise.">A tiny friendship story, a few silly memories, and one surprise waiting at the end.</p>
+          <div class="hero-signoff"><span class="sign-line"></span><span>from your fellow chaos-maker</span></div>
+          <div class="actions hero-actions"><button class="btn" onclick="go('scrapbook')">Open our memory book <span>↗</span></button><button class="btn secondary" onclick="go('invite')">Skip to the surprise</button></div>
+          <div class="hero-footnote"><span>01 / OUR LITTLE STORY</span><span>Made with care, not homework.</span></div>
+        </div>
+        <div class="hero-collage" aria-label="Illustrative friendship photo collage">
+          <div class="collage-orbit orbit-one"></div><div class="collage-orbit orbit-two"></div>
+          <div class="collage-note note-top">the unexpected<br>friendship era ✦</div>
+          <figure class="hero-polaroid hero-photo-main"><img src="assets/friends-sunset.jpg" alt="Illustrative photo of friends watching a sunset"><figcaption>the little moments</figcaption></figure>
+          <figure class="hero-polaroid hero-photo-small"><img src="assets/friends-laughing.jpg" alt="Illustrative photo of friends laughing together"><figcaption>random laughs</figcaption></figure>
+          <figure class="hero-polaroid hero-photo-side"><img src="assets/friends-classroom.jpg" alt="Illustrative classroom friendship snapshot"><figcaption>chapter one</figcaption></figure>
+          <div class="collage-sticker sticker-star">✳</div><div class="collage-sticker sticker-smile">good<br>times :)</div>
+          <div class="collage-bottom-note">CLASSMATES → FRIENDS → CHUDEL & BANDAR</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen center" id="invite">
+      <div class="hero-art"><div class="blob"></div><div class="heart">😊</div></div>
+      <p class="eyebrow">one tiny question first</p>
+      <h2>Will you open <span class="gradient">your surprise?</span></h2>
+      <p>It's a tiny little thing made just for you. Wanna see what's inside? 🌷</p>
+      <div class="actions">
+        <button class="btn" onclick="go('quiz')">Yesss, show me! 🌟</button>
+        <button class="btn secondary" id="noBtn" onclick="sayNo(event)">No 🙈</button>
+      </div>
+      <div class="feedback" id="noMessage" aria-live="polite"></div>
+      <div id="typeArea" style="display:none;margin-top:14px">
+        <p style="margin-bottom:10px">Hehe, type the magic word to continue 😊</p>
+        <div class="answer-row">
+          <input id="magicWord" type="text" placeholder="Type yes please…" aria-label="Type yes please" autocomplete="off">
+          <button class="btn" onclick="checkMagicWord()">Unlock 💌</button>
+        </div>
+        <div class="feedback" id="magicFeedback" aria-live="polite"></div>
+      </div>
+    </section>
+
+    
+    <section class="screen" id="scrapbook">
+      <p class="eyebrow">THE MEMORY BOOK · VOL. 01</p>
+      <h2 class="gradient">From Class Rivals to Friends</h2>
+      <p>A little paper-trail of the plot twist. These are illustrated friendship snapshots, not personal photos — your story stays yours.</p>
+      <div class="scrapbook-book">
+        <div class="scrapbook-tabs" role="tablist" aria-label="Scrapbook chapters">
+          <button class="scrapbook-tab active" onclick="scrapPage(0)">🌷 Cover</button>
+          <button class="scrapbook-tab" onclick="scrapPage(1)">🏆 Class 9</button>
+          <button class="scrapbook-tab" onclick="scrapPage(2)">🎀 Class 10</button>
+          <button class="scrapbook-tab" onclick="scrapPage(3)">🤝 Today</button>
+          <button class="scrapbook-tab" onclick="scrapPage(4)">✉️ Little note</button>
+          <button class="scrapbook-tab" onclick="scrapPage(5)">👻 Nickname lore</button>
+        </div>
+        <article class="scrap-page active">
+          <div class="scrap-cover-layout">
+            <div class="scrap-cover-copy"><span class="paper-label">A CLASSROOM CHRONICLE</span><h3>Our little story</h3><p>Two classmates. One ongoing academic rivalry. An unexpected friendship plot twist.</p><span class="scrap-sticker">The Chudel & Bandar files</span></div>
+            <figure class="polaroid cover-photo"><img src="assets/friends-sunset.jpg" alt="A group of friends spending time together outdoors"><figcaption>the friendship era</figcaption></figure>
+          </div>
+          <div class="scrap-tape-note">Some stories start with competition. The good ones get better.</div>
+          <p style="margin-top:18px;font-size:.85rem">Tap the chapter tabs above to turn the pages.</p>
+        </article>
+        <article class="scrap-page">
+          <h3>Chapter 1: Class 9 🏆</h3>
+          <div class="chapter-split"><div><p><strong>The competition era.</strong> We didn't really talk yet — we were both busy trying to get first position in class.</p><span class="handwritten-note">Rank first. Talk later. 😌</span></div><figure class="polaroid tilt-left"><img src="assets/friends-classroom.jpg" alt="Students studying together in a classroom"><figcaption>the academic rivalry</figcaption></figure></div>
+          <div class="scrap-scoreboard"><div><div style="font-size:1.8rem">📖</div><strong>Mission</strong><br>First position</div><div><div style="font-size:1.8rem">⚡</div><strong>Friendship status</strong><br>Not unlocked</div></div>
+          <span class="scrap-sticker">Academic rivals</span><span class="scrap-sticker">Main-character energy</span>
+        </article>
+        <article class="scrap-page">
+          <h3>Chapter 2: Class 10 🎀</h3>
+          <div class="chapter-split"><div><p><strong>Plot twist unlocked!</strong> At some point, we started talking — and the classmates who competed for first place became friends instead.</p><span class="handwritten-note">Unexpected, but kinda iconic.</span></div><figure class="polaroid tilt-right"><img src="assets/friends-laughing.jpg" alt="Friends laughing together at a casual gathering"><figcaption>new chapter unlocked</figcaption></figure></div>
+          <button class="scrap-reveal" onclick="this.classList.toggle('open')">🔓 Reveal the plot twist <span>Turns out, not every classmate is just competition. Some become friends, too. ✨</span></button>
+          <span class="scrap-sticker">Unexpected friendship</span><span class="scrap-sticker">Rivals → friends</span>
+        </article>
+        <article class="scrap-page">
+          <h3>Chapter 3: The support system 🤝</h3>
+          <div class="chapter-split"><div><p>We might not talk every day, and that's okay. It's still good to have a friend you can help — and who can help you when it matters.</p><span class="handwritten-note">No daily attendance required.</span></div><figure class="polaroid tilt-left"><img src="assets/friends-heart.jpg" alt="Friends sharing a happy moment together"><figcaption>showing up when it counts</figcaption></figure></div>
+          <button class="scrap-reveal" onclick="this.classList.toggle('open')">🌼 A tiny reminder <span>Friendship doesn't have to be constant to be real. Sometimes, showing up when it counts is enough.</span></button>
+          <span class="scrap-sticker">Supportive friend energy</span><span class="scrap-sticker">No daily attendance required 😂</span>
+        </article>
+        <article class="scrap-page">
+          <h3>One little note ✉️</h3>
+          <p>From competing for first position to becoming friends, this friendship took an unexpected route. I'm glad we got to know each other beyond the classroom competition.</p>
+          <p>Here's to more helpful moments, random conversations, and good things ahead. 🌷</p>
+          <span class="scrap-sticker">Made just for you</span>
+        </article>
+
+        <article class="scrap-page">
+          <div style="font-size:2.4rem;margin-bottom:8px">👻 🐒</div>
+          <div class="nickname-question" id="nicknameQuestion">
+            <h4>Quick friendship-history check! 😂</h4>
+            <p>Who started calling the other a teasing nickname first?</p>
+            <div class="nickname-answers">
+              <button class="nickname-answer" type="button" onclick="nicknameAnswer('bandar')">🐒 Me! I called you Bandar first!</button>
+              <button class="nickname-answer" type="button" onclick="nicknameAnswer('chudel')">👻 You! You called me Chudel first!</button>
+              <button class="nickname-answer" type="button" onclick="nicknameAnswer('mystery')">😂 I don't remember!</button>
+            </div>
+            <p class="nickname-reaction" id="nicknameReaction" aria-live="polite"></p>
+          </div>
+          <div class="nickname-chronicles" id="nicknameChronicles" style="display:none">
+            <h3>The Chudel &amp; Bandar Chronicles</h3>
+            <p><strong>Breaking news:</strong> The nickname battle began when the Bandar himself started calling her “Chudel.” And naturally, the Chudel came back with “Bandar.” 😂</p>
+            <div style="text-align:center;margin:10px 0 14px">
+              <span style="display:inline-block;font-size:2rem;background:#fff0f7;border-radius:15px;padding:7px 12px;margin:3px">👻</span>
+              <span style="display:inline-block;font-size:2rem;background:#f0eaff;border-radius:15px;padding:7px 12px;margin:3px">🐒</span>
+            </div>
+            <div class="scrap-scoreboard">
+              <div><div style="font-size:1.8rem">👻</div><strong>Her title</strong><br>👻🧟 Certified Chudel</div>
+              <div><div style="font-size:1.8rem">🐒</div><strong>Your title</strong><br>Official Bandar</div>
+            </div>
+            <p><em>“I started the nickname battle. She chose revenge. Now neither of us is innocent.”</em> 😂</p>
+            <button class="scrap-reveal" onclick="this.classList.toggle('open')">📜 Open the official friendship record <span>Origin of the chaos: he started it by calling her Chudel. She returned the favour with Bandar. The nickname court declares them equally guilty. Case closed. 😂</span></button>
+            <span class="scrap-sticker">Mutual teasing: 100%</span><span class="scrap-sticker">Normal behaviour: questionable</span>
+            <p style="margin-top:12px"><em>“Some friendships have cute nicknames. Ours has a Chudel and a Bandar. We clearly chose chaos.”</em> 🌷</p>
+          </div>
+        </article>
+        <div class="scrap-nav">
+          <button id="scrapPrev" onclick="scrapPage(scrapIndex-1)" disabled>← Previous</button>
+          <button id="scrapNext" onclick="scrapPage(scrapIndex+1)">Next page →</button>
+        </div>
+      </div>
+      <p class="note">A tiny scrapbook made from your real story — with illustrated friendship snapshots and our Chudel–Bandar chaos.</p>
+      <div class="actions">
+        <button class="btn" onclick="go('welcome')">Back to the surprise</button>
+        <button class="btn secondary" onclick="go('invite')">Finished the scrapbook? Next: the little quiz →</button>
+      </div>
+    </section>
+
+<section class="screen" id="quiz">
+      <div style="text-align:right;margin-bottom:8px"><button class="btn secondary" style="padding:8px 12px;font-size:.82rem" onclick="go('scrapbook')">📔 Read the scrapbook</button></div>
+      <div class="progress"><span id="bar"></span></div>
+      <p class="eyebrow">part one · tiny choices</p>
+      <div class="question-count" id="qcount">QUESTION 1 OF 5</div>
+      <h2 id="qtitle">Pick your kind of happy.</h2>
+      <p id="qdesc">No wrong answers. It's your little world.</p>
+      <div class="options" id="options"></div>
+      <p class="note">Choose what feels right ✨ Your selected answers will be shared with the friend who made this surprise.</p>
+      <div class="actions"><button class="btn" id="next" disabled onclick="nextQuestion()">Next little thing →</button></div>
+    </section>
+
+    <section class="screen center" id="score">
+      <div class="hero-art"><div class="blob"></div><div class="heart">🌷</div></div>
+      <p class="eyebrow">part two · your vibe</p>
+      <h2>Your kind of <span class="gradient">magic.</span></h2>
+      <p id="summary">Every answer says a little something about the things that make you, you.</p>
+      <div class="reveal-card"><div class="big">🧸</div><p id="summaryDetail">You deserve the kind of days that feel soft, safe, and full of laughter.</p></div>
+      <div class="actions"><button class="btn" onclick="go('clue')">Find the hidden surprise 🔐</button></div>
+    </section>
+
+    <section class="screen center" id="clue">
+      <p class="eyebrow">part three · tiny mystery</p>
+      <div class="hero-art"><div class="blob"></div><div class="heart">🗝️</div></div>
+      <h2>A little secret is <span class="gradient">locked.</span></h2>
+      <p>To open the final envelope, solve this very important mystery:</p>
+      <div class="cluebox"><div class="big">🌙 + ☁️ = ?</div><p style="margin-bottom:0">A thing that makes a long day feel a little better. Two words. Starts with “s”.</p></div>
+      <p class="note">Hint: it's something you can get from a good friend.</p>
+      <div class="answer-row"><input id="answer" type="text" placeholder="Your guess goes here…" autocomplete="off" aria-label="Answer to the riddle"><button class="btn" onclick="checkAnswer()">Unlock ✨</button></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+      <div class="actions"><button class="btn secondary" onclick="revealAnyway()">I need another hint ✨</button></div>
+    </section>
+
+    <section class="screen center" id="final">
+      <div class="hero-art"><div class="blob"></div><div class="heart">🌟</div></div>
+      <p class="eyebrow">one last thing · open when ready</p>
+      <h2>You found the <span class="gradient">little secret.</span></h2>
+      <p>Okay, enough mystery. Here's the actual reason this tiny website exists…</p>
+      <p>There's a little letter inside. Tap the envelope to open it. 💌</p>
+      <div class="envelope-wrap">
+        <button class="envelope" id="envelope" onclick="openEnvelope()" aria-label="Open your friendship letter" aria-expanded="false">
+          <span class="env-back"></span>
+          <span class="env-paper">
+            <span class="paper-title" id="paperTitle"></span>
+            <span id="letterTeaser" style="color:#a87591;font-size:.9rem"></span>
+          </span>
+          <span class="env-front"></span><span class="env-flap"></span><span class="env-seal">✉️</span>
+        </button>
+        <p class="envelope-hint" id="envelopeHint">Tap to open your letter ✨</p>
+        <div class="reveal-card" id="openedLetter" style="display:none;text-align:left">
+          <div class="big" style="text-align:center">🌼</div>
+          <p id="letterHeading" style="font-family:Georgia,serif;font-size:1.35rem;color:#925b7c;line-height:1.35;text-align:center"></p>
+          <p id="letterBody"></p>
+          <p id="letterSignoff" style="margin-bottom:0;color:#a87591;text-align:right"></p>
+        </div>
+      </div>
+      <p class="note">P.S. Your quiz choices are shared with the friend who made this surprise, so they can see what you picked.</p>
+      <div class="actions"><button class="btn" onclick="celebrate()">One more tiny surprise ✨</button><button class="btn secondary" onclick="restart()">Start again ↺</button></div>
+      <div id="extra" class="feedback"></div>
+    </section>
+  </div>
+  <footer>made with a little extra care · no pressure, just good vibes ✨</footer>
+</main>
+<script>
+// Paste your deployed Google Apps Script web-app URL between the quotes below.
+const ANSWERS_ENDPOINT = "https://script.google.com/macros/s/AKfycbzifCvO4QaQ140zLY1nEeBK3Gij62RSSk1fea_CjRu6K2S2TsZq_pX5R0_Orf1LjHu9/exec";
+const questions = [
+  {title:"Which role do I play in our friendship?",desc:"Be honest, Chudel 😭",opts:[["😂","The comedian"],["🧠","The sensible one (sometimes!)"],["😈","The troublemaker"],["🎭","Somehow all three"]]},
+  {title:"Describe our friendship in just one word.",desc:"One word. No overthinking!",opts:[["🌪️","Chaotic"],["✨","Unexpected"],["🗣️","Unfiltered"],["📸","Priceless"]]},
+  {title:"Who is more likely to win an argument between us?",desc:"Think carefully before choosing 😂",opts:[["😎","Me, because I'm always right"],["🙃","You, because you never give up"],["💬","Whoever has the better comeback"],["♾️","Nobody — the argument never ends"]]},
+  {title:"One day, when we look back at this friendship, what will we probably remember most?",desc:"A tiny trip down memory lane.",opts:[["🤣","The stupid jokes"],["🏫","The school memories"],["🫶","The way we supported each other"],["💗","How an unexpected friendship became a headache part of life 💗"]]},
+  {title:"What would I choose on a completely free day?",desc:"Guess my ideal day.",opts:[["😴","Sleeping for hours"],["🛍️","Going out somewhere"],["😂","Talking nonsense with friends"],["📚","Starting something productive and abandoning it"]]},
+  {title:"If we switched personalities for one day, what would be funniest?",desc:"This could get dangerous 😂",opts:[["🎙️","Hearing me talk exactly like you"],["🐒","Watching you copy my habits"],["🤫","Both of us exposing each other's secrets"],["😶","Nobody noticing the difference"]]},
+  {title:"If you could save one thing from our friendship in a time capsule, what would it be?",desc:"Pick the memory you'd keep.",opts:[["🤣","Our funniest conversation"],["🏫","Our first proper friendship memory"],["🙈","Our most ridiculous nickname"],["📝","A note describing us exactly as we are today"]]},
+  {title:"If you could add one new chapter to our scrapbook, what would it be?",desc:"There's still more story to come.",opts:[["🧳","Our next big adventure"],["😂","The Funniest Day Yet"],["📵","A Day We Spent Without Checking Our Phones"],["📸","A Future Reunion Story"]]},
+  {title:"What should be written on the last page of our friendship scrapbook?",desc:"Final page, final decision. Make it count!",opts:[["📖","To be continued…"],["🙄","Still annoying each other, years later."],["✨","Some friendships start by accident and become memories."],["💗","From barely talking in Class 9 to becoming each other's headache — what a plot twist! 😂💗"]]}
+];
+let index=0, answers=[];
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+let noClicks = 0;
+function sayNo(event){
+  noClicks++;
+  const messages = [
+    "Awww, tap yes to see your surprise 🌷✨",
+    "Hehe, that button says no, but this little surprise says try again! 🎀",
+    "Pretty please with a strawberry on top? 🍓😄",
+    "The tiny surprise is waiting for you! 🌷✨",
+    "Just one little yes, pleaseee? I promise it's cute! 💌",
+    "The surprise is blushing and waiting for you 🌷💞"
+  ];
+  document.getElementById('noMessage').textContent = messages[(noClicks-1)%messages.length];
+  document.getElementById('typeArea').style.display = 'block';
+  // The "No" button playfully scoots away after each tap, but never leaves the screen.
+  const btn = document.getElementById('noBtn');
+  const moves = [[42,-12],[-36,18],[24,24],[-48,-8],[10,-25],[ -18,12]];
+  const move = moves[(noClicks-1)%moves.length];
+  btn.style.left = move[0] + 'px';
+  btn.style.top = move[1] + 'px';
+  btn.style.transform = `rotate(${noClicks%2 ? 4 : -4}deg)`;
+  document.getElementById('magicWord').focus({preventScroll:true});
+}
+function checkMagicWord(){
+  const v = document.getElementById('magicWord').value.trim().toLowerCase().replace(/[!\.\s]/g,'');
+  if(['yesplease','yespls','yessplease','yes'].includes(v)){
+    document.getElementById('magicFeedback').textContent = 'Yayyyyy! I knew you’d be curious 🎉';
+    setTimeout(()=>go('quiz'),650);
+  }else{
+    document.getElementById('magicFeedback').textContent = 'Pssst… try typing “yes please” 😊✨';
+  }
+}
+document.getElementById('magicWord').addEventListener('keydown',e=>{if(e.key==='Enter')checkMagicWord();});
+function renderQuestion(){
+  const q=questions[index];document.getElementById('qcount').textContent=`QUESTION ${index+1} OF ${questions.length}`;
+  document.getElementById('qtitle').textContent=q.title;document.getElementById('qdesc').textContent=q.desc;
+  document.getElementById('bar').style.width=`${index/questions.length*100}%`;
+  document.getElementById('next').disabled=true;document.getElementById('next').textContent=index===questions.length-1?'See your vibe ✨':'Next little thing →';
+  const root=document.getElementById('options');root.innerHTML='';
+  q.opts.forEach((o,i)=>{const b=document.createElement('button');b.className='option';b.innerHTML=`<span class="emoji">${o[0]}</span>${o[1]}`;b.onclick=()=>{answers[index]=i;root.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');document.getElementById('next').disabled=false;};root.appendChild(b);});
+}
+function nextQuestion(){if(answers[index]===undefined)return;if(index<questions.length-1){index++;renderQuestion();}else{document.getElementById('bar').style.width='100%';showSummary();sendAnswers();go('score');}}
+async function sendAnswers(){
+  const payload={submittedAt:new Date().toISOString(),answers:questions.map((q,i)=>({question:q.title,choice:q.opts[answers[i]]?.[1]||"No answer",option:answers[i]===undefined?"":String.fromCharCode(65+answers[i])}))};
+  if(!ANSWERS_ENDPOINT || ANSWERS_ENDPOINT.includes("PASTE_GOOGLE_APPS_SCRIPT")){
+    document.getElementById('summaryDetail').textContent += " (To enable answer delivery, the site owner still needs to connect the response endpoint.)";
+    console.warn("Answers are not being sent yet: configure ANSWERS_ENDPOINT in index.html.");return;
+  }
+  try{
+    await fetch(ANSWERS_ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'payload='+encodeURIComponent(JSON.stringify(payload))});
+    document.getElementById('summaryDetail').textContent += " Your choices have been sent to the friend who made this surprise.";
+  }catch(err){
+    document.getElementById('summaryDetail').textContent += " We couldn't send your choices right now; please let the creator know.";
+    console.error('Answer submission failed',err);
+  }
+}
+function showSummary(){
+ const picked=answers.map((a,i)=>questions[i].opts[a][1]);
+ document.getElementById('summary').textContent=`Your choices: ${picked.slice(0,3).join(' · ')}. Excellent taste, honestly.`;
+ const details=[
+  "You seem to appreciate the simple things that make a day feel special. Never underestimate your own ability to bring that feeling to someone else.",
+  "You chose a lovely mix of fun and comfort. I hope your life gives you lots of both, preferably with snacks.",
+  "Your answers have main-character-on-a-soft-sunny-day energy. Please continue being exactly the person you are.",
+  "You have a good eye for the little things. The world needs more people who notice them."
+ ];
+ document.getElementById('summaryDetail').textContent=details[answers.reduce((a,b)=>a+b,0)%details.length];
+}
+function checkAnswer(){const val=document.getElementById('answer').value.trim().toLowerCase();if(!val){document.getElementById('feedback').textContent='Give it a guess first, detective 🕵️';return;}if(/support|someone|shoulder|smile|sweet|safety|safe|sleep|snuggle|sunshine/.test(val)){unlock();}else{document.getElementById('feedback').textContent='Not quite… think of what a good friend can give you. Hint: s _ _ _ _ _ _';}}
+function revealAnyway(){document.getElementById('feedback').textContent='Extra hint: “support” is one good answer. You can also type “safe” or “sunshine” 🌞';}
+function unlock(){document.getElementById('feedback').textContent='Mystery solved! The envelope is yours 🌟';setTimeout(()=>{go('final');confetti();},550);}
+document.getElementById('answer').addEventListener('keydown',e=>{if(e.key==='Enter')checkAnswer();});
+function celebrate(){const lines=['Official reminder: you are a certified good human. 🌷','Your daily permission slip: take a break and get a little treat. 🍓','Achievement unlocked: made it through another day. Proud of you. ✨','Friendship bonus: you now owe yourself something nice. 🧁'];document.getElementById('extra').textContent=lines[Math.floor(Math.random()*lines.length)];confetti();}
+function confetti(){const symbols=['✦','✿','✨','🌟','☁️'];for(let i=0;i<28;i++){const e=document.createElement('div');e.className='confetti';e.textContent=symbols[Math.floor(Math.random()*symbols.length)];e.style.left=Math.random()*100+'vw';e.style.fontSize=(12+Math.random()*18)+'px';e.style.animationDelay=(Math.random()*.8)+'s';e.style.color=['#df7fa4','#b39ae7','#efb6ca','#d7a7dc'][i%4];document.body.appendChild(e);setTimeout(()=>e.remove(),4500);}}
+let typingTimer=null;
+function typeWelcome(){
+ const target=document.getElementById('welcomeTyping');
+ if(!target)return;
+ const message="I made a little something for one of my favourite humans. It has a few choices, a tiny mystery, and absolutely no homework. Promise.";
+ target.textContent='';
+ if(typingTimer)clearInterval(typingTimer);
+ let i=0;
+ const cursor=document.createElement('span');cursor.className='typed-cursor';cursor.textContent='|';target.appendChild(cursor);
+ typingTimer=setInterval(()=>{
+   if(i<message.length){target.insertBefore(document.createTextNode(message[i]),cursor);i++;}
+   else{clearInterval(typingTimer);typingTimer=null;cursor.remove();}
+ },28);
+}
+let letterTypingTimers=[];
+function typeIntoElement(element, message, speed=32, done=()=>{}){
+ if(!element)return;
+ element.textContent='';
+ let i=0;
+ const timer=setInterval(()=>{
+   if(i<message.length){
+     element.textContent+=message.charAt(i++);
+   }else{
+     clearInterval(timer);
+     letterTypingTimers=letterTypingTimers.filter(t=>t!==timer);
+     done();
+   }
+ },speed);
+ letterTypingTimers.push(timer);
+}
+function stopLetterTyping(){
+ letterTypingTimers.forEach(timer=>clearInterval(timer));
+ letterTypingTimers=[];
+}
+function openEnvelope(){
+ const env=document.getElementById('envelope');
+ if(env.classList.contains('open'))return;
+ stopLetterTyping();
+ env.classList.add('open');env.setAttribute('aria-expanded','true');
+ document.getElementById('envelopeHint').textContent='Your little note is unfolding… 🌷';
+ const title=document.getElementById('paperTitle');
+ const teaser=document.getElementById('letterTeaser');
+ // Wait until the paper has started sliding out, then type the words one by one.
+ setTimeout(()=>{
+   typeIntoElement(title,'A little note for you 🌷',38,()=>{
+     typeIntoElement(teaser,'A tiny friendship surprise, just for you ✨',30,()=>{
+       document.getElementById('envelopeHint').textContent='Surprise! Your note is below 🌷';
+       const letter=document.getElementById('openedLetter');
+       letter.style.display='block';
+       letter.scrollIntoView({behavior:'smooth',block:'nearest'});
+       typeIntoElement(document.getElementById('letterHeading'),"Just a reminder that you're appreciated.",34,()=>{
+         typeIntoElement(document.getElementById('letterBody'),"Life gets busy, days get weird, and sometimes we forget to tell our people that they make things better. So here's me saying it: I'm glad we're friends. Thanks for being your funny, kind, wonderfully-you self. I hope something good happens to you today. You deserve that. 🌟",20,()=>{
+           typeIntoElement(document.getElementById('letterSignoff'),'— your friend, who made this little corner of the internet for you',28,()=>{showFriendshipWrapped();});
+         });
+       });
+     });
+   });
+ },420);
+ confetti();
+}
+function restart(){index=0;answers=[];noClicks=0;document.getElementById('noMessage').textContent='';document.getElementById('typeArea').style.display='none';document.getElementById('noBtn').style.left='0px';document.getElementById('noBtn').style.top='0px';document.getElementById('noBtn').style.transform='';document.getElementById('magicWord').value='';document.getElementById('magicFeedback').textContent='';document.getElementById('answer').value='';document.getElementById('feedback').textContent='';document.getElementById('extra').textContent='';document.getElementById('envelope').classList.remove('open');document.getElementById('envelope').setAttribute('aria-expanded','false');stopLetterTyping();document.getElementById('openedLetter').style.display='none';document.getElementById('paperTitle').textContent='';document.getElementById('letterTeaser').textContent='';document.getElementById('letterHeading').textContent='';document.getElementById('letterBody').textContent='';document.getElementById('letterSignoff').textContent='';document.getElementById('friendshipWrapped').style.display='none';document.getElementById('shareStatus').textContent='';document.getElementById('envelopeHint').textContent='Tap to open your letter ✨';renderQuestion();go('welcome');typeWelcome();}
+renderQuestion();
+typeWelcome();
+
+function showFriendshipWrapped(){
+ const card=document.getElementById('friendshipWrapped');
+ if(card){card.style.display='block';}
+}
+async function shareFriendshipCard(){
+ const status=document.getElementById('shareStatus');
+ const shareText='Friendship Wrapped 🌷\\nCertified good human • Pure chaos • 10/10 friend energy\\nA little reminder: your presence makes ordinary days better. Thanks for being you!';
+ try{
+   if(navigator.share){
+     await navigator.share({title:'Friendship Wrapped 🌷',text:shareText});
+     status.textContent='Your friendship card is ready to share ✨';
+   }else if(navigator.clipboard && window.isSecureContext){
+     await navigator.clipboard.writeText(shareText);
+     status.textContent='Friendship card text copied! Paste it into your favourite app 🌼';
+   }else{
+     const temp=document.createElement('textarea');temp.value=shareText;temp.setAttribute('readonly','');
+     temp.style.position='fixed';temp.style.opacity='0';document.body.appendChild(temp);temp.select();
+     const ok=document.execCommand('copy');temp.remove();
+     status.textContent=ok?'Friendship card text copied! Paste it into your favourite app 🌼':'Sharing is not supported here. You can take a screenshot of the card!';
+   }
+ }catch(err){
+   if(err && err.name==='AbortError'){status.textContent='No worries — your card is still here 🌷';}
+   else{status.textContent='You can share it with a screenshot of this card 🌼';}
+ }
+}
+function downloadFriendshipCard(){
+ const status=document.getElementById('shareStatus');
+ const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+ <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffafd"/><stop offset="1" stop-color="#f0eaff"/></linearGradient></defs>
+ <rect width="1080" height="1350" rx="48" fill="url(#bg)"/>
+ <rect x="45" y="45" width="990" height="1260" rx="36" fill="none" stroke="#e9cfe2" stroke-width="4"/>
+ <g font-family="Arial,sans-serif" text-anchor="middle">
+ <text x="540" y="220" font-size="32" letter-spacing="8" fill="#a87591">A TINY FRIENDSHIP RECAP</text>
+ <text x="540" y="340" font-family="Georgia,serif" font-size="78" fill="#925b7c">Friendship Wrapped</text>
+ <text x="540" y="465" font-size="43" fill="#805b7b">🌼 Certified good human</text>
+ <text x="540" y="550" font-size="43" fill="#805b7b">🎀 Vibe: pure chaos</text>
+ <text x="540" y="635" font-size="43" fill="#805b7b">⭐ 10/10 friend energy</text>
+ <text x="540" y="790" font-size="35" fill="#72566f">Your presence makes ordinary days better.</text>
+ <text x="540" y="850" font-size="35" fill="#72566f">Thanks for being you, and for making</text>
+ <text x="540" y="910" font-size="35" fill="#72566f">friendship feel easy and fun.</text>
+ <text x="540" y="1070" font-size="54" fill="#a87591">🌷 ✿ ✦ ✿ 🌷</text>
+ <text x="540" y="1170" font-size="28" fill="#a87591">made with friendship and a little sparkle</text>
+ </g></svg>`;
+ const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');a.href=url;a.download='friendship-wrapped-card.svg';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+ if(status)status.textContent='Your shareable friendship card has been downloaded 🌼';
+}
+document.addEventListener('DOMContentLoaded',()=>{
+ const share=document.getElementById('shareFriendshipCard');
+ const save=document.getElementById('saveFriendshipCard');
+ if(share)share.addEventListener('click',shareFriendshipCard);
+ if(save)save.addEventListener('click',downloadFriendshipCard);
+});
+
+
+function nicknameAnswer(choice){
+  const reaction=document.getElementById('nicknameReaction');
+  const chronicles=document.getElementById('nicknameChronicles');
+  const question=document.getElementById('nicknameQuestion');
+  const reactions={
+    bandar:"Hmmmm, the Bandar is trying to rewrite history! 😂 Keep investigating…",
+    chudel:"BUSTED! 😂👻 The Bandar has been exposed as the original troublemaker!",
+    mystery:"The mystery continues! Nobody is accepting responsibility. Classic friendship behaviour. 😂"
+  };
+  if(reaction) reaction.textContent=reactions[choice] || "";
+  if(chronicles) chronicles.style.display='block';
+  if(question) question.querySelectorAll('.nickname-answer').forEach(button=>{
+    button.disabled=true;
+    button.style.opacity='.72';
+    button.style.cursor='default';
+  });
+  if(chronicles) chronicles.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+let scrapIndex=0;
+function scrapPage(next){
+  const pages=[...document.querySelectorAll('#scrapbook .scrap-page')];
+  const tabs=[...document.querySelectorAll('#scrapbook .scrapbook-tab')];
+  scrapIndex=Math.max(0,Math.min(pages.length-1,next));
+  pages.forEach((p,i)=>p.classList.toggle('active',i===scrapIndex));
+  tabs.forEach((t,i)=>t.classList.toggle('active',i===scrapIndex));
+  document.getElementById('scrapPrev').disabled=scrapIndex===0;
+  document.getElementById('scrapNext').disabled=scrapIndex===pages.length-1;
+}
+
+</script>
+
+<section class="wrapped-card" id="friendshipWrapped" aria-label="Friendship Wrapped" style="display:none">
+  <div class="wrapped-kicker">a tiny friendship recap ✨</div>
+  <h2 class="wrapped-title">Friendship Wrapped</h2>
+  <div>
+    <span class="wrapped-chip">🌼 Certified good human</span>
+    <span class="wrapped-chip">🎀 Vibe: pure chaos</span>
+    <span class="wrapped-chip">⭐ 10/10 friend energy</span>
+  </div>
+  <p class="wrapped-message">A little reminder for your screen: your presence makes ordinary days better. Thanks for being you, and for making friendship feel easy and fun. 🌷</p>
+  <div class="share-actions">
+    <button type="button" id="shareFriendshipCard">Share my friendship card</button>
+    <button type="button" class="secondary" id="saveFriendshipCard">Download card image</button>
+  </div>
+  <div class="share-status" id="shareStatus" aria-live="polite"></div>
+</section>
+
+</body>
+</html>
